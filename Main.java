@@ -138,6 +138,7 @@ public class Main {
                 currentUser = null;
                 continue;
             }
+            //code for admin
             else {
                     System.out.println("Access denied. Only students can access these options.");
                     currentUser.logout();
