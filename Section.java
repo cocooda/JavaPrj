@@ -4,12 +4,12 @@ import java.util.List;
 
 public class Section {
     private String ID;
-    private Course course; // Assume Course is another class
-    private Professor professor; // Assume Professor is another class
-    private String semester; // Assume semester is a String
-    private String description; // New attribute
-    private String timeSlot; // New attribute
-    private String schoolYear; // New attribute
+    private Course course; 
+    private Professor professor; 
+    private String semester; 
+    private String description; 
+    private String timeSlot; 
+    private String schoolYear; 
 
     private static final List<String> VALID_SEMESTERS = Arrays.asList("Spring", "Summer", "Fall");
 
@@ -36,7 +36,6 @@ public class Section {
     }
 
     // Getter and setter methods for all attributes
-    // ...
     public String getID() {
         return ID;
     }
