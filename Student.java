@@ -83,10 +83,17 @@ public class Student extends User {
         return order.getOrDefault(semester, 0);
     }
 
-    // Method to search sections by ID
-    public List<Section> searchSectionsByID(String sectionID) {
+    // Method to search sections by course ID
+    public List<Section> searchSectionsByCourseID(String courseID) {
         return readSectionsFromDatabase().stream()
-            .filter(section -> section.getID().equals(sectionID))
+            .filter(section -> section.getCourse().getCourseId().equals(courseID))
+            .collect(Collectors.toList());
+    }
+
+    // Method to search sections by Course Name
+    public List<Section> searchSectionsByCourseName(String courseName) {
+        return readSectionsFromDatabase().stream()
+            .filter(section -> section.getCourse().getCourseName().equalsIgnoreCase(courseName))
             .collect(Collectors.toList());
     }
 
