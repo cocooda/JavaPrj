@@ -63,9 +63,10 @@ public class Main {
                 Student currentStudent = (Student) currentUser;
                 List<Section> foundSections = null;
                 System.out.println("1. Search sections by course ID");
-                System.out.println("2. Search sections by professor");
-                System.out.println("3. Log out");
-                System.out.println("4. Exit");
+                System.out.println("2. Search sections by course name");
+                System.out.println("3. Search sections by professor");
+                System.out.println("4. Log out");
+                System.out.println("5. Exit");
                 System.out.print("Enter your choice: ");
                 int choice = scanner.nextInt();
                 scanner.nextLine(); // consume newline
