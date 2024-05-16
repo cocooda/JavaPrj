@@ -62,7 +62,7 @@ public class Main {
                 // Accessing the student object from database
                 Student currentStudent = (Student) currentUser;
                 List<Section> foundSections = null;
-                System.out.println("1. Search sections by ID");
+                System.out.println("1. Search sections by course ID");
                 System.out.println("2. Search sections by professor");
                 System.out.println("3. Log out");
                 System.out.println("4. Exit");
@@ -71,9 +71,9 @@ public class Main {
                 scanner.nextLine(); // consume newline
                 switch (choice) {
                     case 1:
-                        System.out.print("Enter section ID: ");
-                        String id = scanner.nextLine();
-                        foundSections = currentStudent.searchSectionsByID(id);
+                        System.out.print("Enter course ID: ");
+                        String courseid = scanner.nextLine();
+                        foundSections = currentStudent.searchSectionsByCourseID(courseid);
                         System.out.println("Sections found: ");
                         foundSections.forEach(System.out::println);
                         System.out.println("1. Register for a section");
@@ -96,6 +96,31 @@ public class Main {
                         }
                         break;
                     case 2:
+                        System.out.print("Enter course name: ");
+                        String coursename = scanner.nextLine();
+                        foundSections = currentStudent.searchSectionsByCourseName(coursename);
+                        System.out.println("Sections found: ");
+                        foundSections.forEach(System.out::println);
+                        System.out.println("1. Register for a section");
+                        System.out.println("2. Back to main menu");
+                        System.out.print("Enter your choice: ");
+                        int choice2 = scanner.nextInt();
+                        scanner.nextLine(); // consume newline
+                        if (choice2 == 1) {
+                            System.out.print("Enter section ID to register: ");
+                            String sectionID = scanner.nextLine();
+                            Section sectionToRegister = foundSections.stream()
+                            .filter(s->s.getID().equals(sectionID))
+                            .findFirst()
+                            .orElse(null);
+                            if (sectionToRegister == null) {
+                                System.out.println("No section found with the given ID.");
+                            }
+                            currentStudent.registerSection(sectionToRegister);
+                            System.out.println("Registration successful!");
+                        }
+                        break;
+                    case 3:
                         System.out.print("Enter professor name: ");
                         String name = scanner.nextLine();
                         Professor prof = new Professor(name);
@@ -104,9 +129,9 @@ public class Main {
                         System.out.println("1. Register for a section");
                         System.out.println("2. Back to main menu");
                         System.out.print("Enter your choice: ");
-                        int choice2 = scanner.nextInt();
+                        int choice3 = scanner.nextInt();
                         scanner.nextLine(); // consume newline
-                        if (choice2 == 1) {
+                        if (choice3 == 1) {
                             System.out.print("Enter section ID to register: ");
                             String sectionID = scanner.nextLine();
                             Section sectionToRegister = foundSections.stream()
@@ -120,11 +145,11 @@ public class Main {
                             System.out.println("Registration successful!");
                         }
                         break;
-                    case 3:
+                    case 4:
                         currentUser.logout();
                         currentUser = null;
                         break;
-                    case 4:
+                    case 5:
                         System.out.println("Exiting...");
                         scanner.close();
                         return;
@@ -138,6 +163,7 @@ public class Main {
                 currentUser = null;
                 continue;
             }
+            
             //code for admin
             else {
                     System.out.println("Access denied. Only students can access these options.");
