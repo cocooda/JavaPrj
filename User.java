@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    private int userID;
+    private String userID;
     private String username;
     private String password; 
     private String role;
     private boolean isLoggedIn = false;
 
-    public User(int userID, String username, String password, String role) {
+    public User(String userID, String username, String password, String role) {
         this.userID = userID;
         this.username = username;
         this.password = password;
@@ -19,7 +19,7 @@ public class User {
     }
 
     // Getters
-    public int getUserId() {
+    public String getUserID() {
         return userID;
     }
 
@@ -51,21 +51,37 @@ public class User {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                // Assume each line in the text file represents a user
-                // and the attributes are separated by commas
-                int userID = Integer.parseInt(parts[0]);
+                if (parts.length < 4) {
+                    System.out.println("Invalid user data format: " + line);
+                    continue;
+                }
+                String userID = parts[0];
                 String username = parts[1];
                 String password = parts[2];
                 String role = parts[3];
+
                 switch (role) {
                     case "admin":
                         users.put(username, new Admin(userID, username, password, role));
                         break;
                     case "student":
-                        users.put(username, new Student(userID, username, password, role));
+                        if (parts.length >= 5) {
+                            String program = parts[4];
+                            users.put(username, new Student(userID, username, password, role, program));
+                        } else {
+                            System.out.println("Invalid student data format: " + line);
+                        }
                         break;
                     case "professor":
-                        users.put(username, new Professor(userID, username, password, role));
+                        if (parts.length >= 5) {
+                            String name = parts[4];
+                            users.put(username, new Professor(userID, username, password, role, name));
+                        } else {
+                            System.out.println("Invalid professor data format: " + line);
+                        }
+                        break;
+                    default:
+                        System.out.println("Unknown role: " + role);
                         break;
                 }
             }
@@ -74,6 +90,7 @@ public class User {
         }
         return users;
     }
+    
 
     public boolean login(String username, String password) {
         if (getUsername().equals(username) && getPassword().equals(password)) {
