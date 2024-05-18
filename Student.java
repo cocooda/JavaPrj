@@ -83,6 +83,32 @@ public class Student extends User {
         return order.getOrDefault(semester, 0);
     }
 
+    // Method to change info
+    public void changeInfo(String newUsername, String newPassword, String newRole, String newProgram) {
+    try {
+        List<String> lines = Files.readAllLines(Paths.get("users.txt"));
+        List<String> modifiedLines = new ArrayList<>();
+
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            // Assume each line in the text file represents a user
+            // and the attributes are separated by commas
+            if (parts[0].equals(this.getUserID())) {
+                // If the userID matches, change the user's info except for the userID
+                modifiedLines.add(this.getUserID() + "," + newUsername + "," + newPassword + "," + newRole + "," + newProgram);
+            } else {
+                // If the userID does not match, keep the original line
+                modifiedLines.add(line);
+            }
+        }
+
+        // Write the modified lines back to the file
+        Files.write(Paths.get("users.txt"), modifiedLines);
+        } catch (IOException e) {
+        e.printStackTrace();
+        }
+    }
+
     // Method to search sections by course ID
     public List<Section> searchSectionsByCourseID(String courseID) {
         return readSectionsFromDatabase().stream()
