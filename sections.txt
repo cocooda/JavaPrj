@@ -1,1 +1,9 @@
-CS201A,CS201,John,Fall,A,AM,2024
+CS101A,CS101,Joe,Spring,Free Electives,Thursday PM,2023
+CS101B,CS101,John,Spring,Free Electives,Thursday AM,2023
+CS201A,CS201,Joe,Summer,MAJOR ELECTIVES,Tuesday AM,2024
+CS201B,CS201,John,Summer,MAJOR ELECTIVES,Tuesday AM,2024
+CS201C,CS201,Joe,Fall,MAJOR ELECTIVES,Friday PM,2024
+CS202A,CS202,John,Fall,MAJOR ELECTIVES,Monday AM,2024
+MTH101A,MTH101,Poo,Spring,Cumulative,Monday AM,2024
+SCI-L101A,SCI-L101,Poo,Spring,Institution,Monday PM,2025
+ENG101A,ENG101,Ann,Summer,Cumulative,Wednesday AM,2025
