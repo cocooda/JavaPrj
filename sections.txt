@@ -1,1 +1,3 @@
-CS101,Computer Science,John Doe,Fall,Intro to CS,AM,2024
+CS101A,Computer Science,John Doe,Fall,Intro to CS,AM,2024
+CS205B,Computer Science,Poo,Fall,CS,PM,2026
+CS201A,CS201,John,Fall,A,AM,2024

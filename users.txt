@@ -1,4 +1,4 @@
 1,student1,password,student, CS
 2,admin1,password,admin,null
-3,professor1,password,professor, A
-4,student2,password,student, BA
+3,professor1,password,professor,John
+4,student2,password,student,BA
