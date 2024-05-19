@@ -2,13 +2,14 @@ public class Professor extends User {
     private String name;
     
     //Constructor
-    public Professor(int userID, String username, String password, String role) {
+    public Professor(String userID, String username, String password, String role, String name) {
         super(userID, username, password, role);
+        this.name =name;
     }
 
     public Professor(String name) {
-        super(0, "", "", ""); // You may want to replace these with actual values
-        this.name = name;
+        super("", "","", "");
+        this.name = name; 
     }
 
     // Getter and setter methods for all attributes
@@ -19,5 +20,6 @@ public class Professor extends User {
     public void setName(String name) {
         this.name = name;
     }
+
 }
 
