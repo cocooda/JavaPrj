@@ -2,11 +2,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 
 
@@ -15,13 +21,13 @@ public class Student extends User {
     private List<Section> registeredSections; // Assume Section is another class
     
 
-    public Student(int userID, String username, String password, String role, String program) {
+    public Student(String userID, String username, String password, String role, String program) {
         super(userID, username, password, role);
         this.program = program;
         this.registeredSections = new ArrayList<>();
     }
 
-    public Student(int userID, String username, String password, String role) {
+    public Student(String userID, String username, String password, String role) {
         super(userID, username, password, role);
     }
 
@@ -83,30 +89,11 @@ public class Student extends User {
         return order.getOrDefault(semester, 0);
     }
 
-    // Method to change info
-    public void changeInfo(String newUsername, String newPassword, String newRole, String newProgram) {
-    try {
-        List<String> lines = Files.readAllLines(Paths.get("users.txt"));
-        List<String> modifiedLines = new ArrayList<>();
-
-        for (String line : lines) {
-            String[] parts = line.split(",");
-            // Assume each line in the text file represents a user
-            // and the attributes are separated by commas
-            if (parts[0].equals(this.getUserID())) {
-                // If the userID matches, change the user's info except for the userID
-                modifiedLines.add(this.getUserID() + "," + newUsername + "," + newPassword + "," + newRole + "," + newProgram);
-            } else {
-                // If the userID does not match, keep the original line
-                modifiedLines.add(line);
-            }
-        }
-
-        // Write the modified lines back to the file
-        Files.write(Paths.get("users.txt"), modifiedLines);
-        } catch (IOException e) {
-        e.printStackTrace();
-        }
+    // Method to search sections by course ID
+    public List<Section> searchSectionsByCourseID(String courseID) {
+        return readSectionsFromDatabase().stream()
+            .filter(section -> section.getCourse().getCourseID().equals(courseID))
+            .collect(Collectors.toList());
     }
 
     // Method to search sections by Course Name
@@ -132,7 +119,7 @@ public class Student extends User {
             System.out.println("Registered succesfully.");
             // Update the text file database to reflect the new registration
             try {
-                String registrationInfo = this.getUserId() + "," + section.getID() + "\n";
+                String registrationInfo = this.getUserID() + "," + section.getID() + "\n";
                 Files.write(Paths.get("registrations.txt"), registrationInfo.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -141,4 +128,98 @@ public class Student extends User {
             System.out.println("You have already registered for this section or the section is currently unavailable.");
         }
     }
+
+    //method to change info
+
+	List<Student> List1 = new ArrayList<Student>();
+
+	public void ReadData() {
+		String userID, username, password, role, program;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("users.txt"));
+			String line = br.readLine();
+			while (line != null) {
+				String[] value = line.split(",");
+				userID = value[0];
+				username = value[1];
+				password = value[2];
+				program = value[3];
+				role = value[4];
+				List1.add(new Student(userID, username, password, program, role));
+				line = br.readLine();
+			}
+			br.close();
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+//	public void Add() {
+//
+//		Scanner sc = new Scanner(System.in);
+//		System.out.println("input id: ");
+//		String ID = sc.nextLine();
+//		System.out.println("input name: ");
+//		String name = sc.nextLine();
+//		System.out.println("input password: ");
+//		String password = sc.nextLine();
+//		List1.add(new Student(name, ID, password, role));
+//
+//	}
+
+	public Student Search(String userID) {
+		for (Student x : List1) {
+			if (x.getUserID().contains(userID)) {
+				return x;
+			}
+		}
+		return null;
+	}
+
+	public void changeinfo(String userID, String program, String role) {
+		ReadData();
+		Student x = Search(userID);
+//		String userID1 = userID;
+//		File myObj = new File("users.txt");
+//		myObj.delete();
+		if (x != null) {
+
+			Scanner sc = new Scanner(System.in);
+			System.out.println("input name: ");
+			String name = sc.nextLine();
+			System.out.println("input password: ");
+			String password = sc.nextLine();
+			List1.set(List1.indexOf(x), new Student(userID, name, password, program, role));
+		} else {
+			System.out.println("Student not found.");
+		}
+	}
+
+	public void deleteFile() {
+		File file = new File("users.txt");
+		if (file.exists()) {
+			file.delete();
+		}
+	}
+
+	public void SaveData() {
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt"));
+			for (Student x : List1) {
+				writer.write(x.getUserID() + "," + x.getUsername() + "," + x.getPassword() + "," + x.getProgram() + ","
+						+ x.getRole());
+				writer.newLine();
+
+			}
+			writer.close();
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+
+
 }
