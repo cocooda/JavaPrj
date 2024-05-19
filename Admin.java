@@ -92,9 +92,10 @@ public class Admin extends User {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 String existingUsername = parts[1];
-                if (!existingUsername.equals(username)) {
-                    lines.add(line);
-                    userFound = true;
+                if (existingUsername.equals(username)) {
+                    userFound = true; // found, don't add it to the updated list
+                } else {
+                    lines.add(line); // Add other courses to the updated list
                 }
             }
             reader.close();
@@ -180,6 +181,7 @@ public class Admin extends User {
 
     // remove Section method
     public void removeSection(String sectiontoremove) {
+        boolean sectionFound = false;
         try {
             List<String> lines = new ArrayList<>();
             BufferedReader reader = new BufferedReader(new FileReader("sections.txt"));
@@ -187,12 +189,18 @@ public class Admin extends User {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 String existingSection = parts[0].trim().toLowerCase();
-                if (!existingSection.equals(sectiontoremove.replaceAll("\\s", "").toLowerCase())) {
-                lines.add(line);
+                if (existingSection.equals(sectiontoremove.replaceAll("\\s", "").toLowerCase())) {
+                    sectionFound = true; // Course found, don't add it to the updated list
+                } else {
+                    lines.add(line); // Add other courses to the updated list
                 }
             }
             reader.close();
 
+            if (!sectionFound) {
+                System.out.println("No section found with the ID: " + sectiontoremove);
+                return;
+            }
             BufferedWriter writer = new BufferedWriter(new FileWriter("sections.txt"));
             for (String updatedLine : lines) {
                 writer.write(updatedLine);
@@ -287,30 +295,39 @@ public class Admin extends User {
     }
 
     // remove Courses function
-    public void removeCourse(String coursename) {
+    public void removeCourse(String courseName) {
+        boolean courseFound = false;
         try {
             List<String> lines = new ArrayList<>();
             BufferedReader reader = new BufferedReader(new FileReader("courses.txt"));
-            String line; 
+            String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 String existingCourse = parts[0].trim().toLowerCase();
-                if (!existingCourse.equals(coursename.replaceAll("\\s", "").toLowerCase())) {
-                    lines.add(line);
+                if (existingCourse.equals(courseName.replaceAll("\\s", "").toLowerCase())) {
+                    courseFound = true; // Course found, don't add it to the updated list
+                } else {
+                    lines.add(line); // Add other courses to the updated list
                 }
             }
             reader.close();
-
+    
+            if (!courseFound) {
+                System.out.println("No course found with the name: " + courseName);
+                return;
+            }
+    
             BufferedWriter writer = new BufferedWriter(new FileWriter("courses.txt"));
             for (String updatedLine : lines) {
                 writer.write(updatedLine);
                 writer.newLine();
             }
             writer.close();
-
+    
             System.out.println("Course removed successfully!");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
 }
