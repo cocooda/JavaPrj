@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -28,7 +29,7 @@ public class Main {
                 sectiondatabase.createNewFile();
                 FileWriter writer = new FileWriter(sectiondatabase);
                 // Write some initial data to the database
-                writer.write("CS101,Computer Science,John Doe,Fall,Intro to CS,AM,2024\n");
+                writer.write("CS101,Computer Science,John Doe,Fall,Intro to CS,Monday AM,2024\n");
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -44,7 +45,7 @@ public class Main {
                 // The format is: userID,username,password,role
                 writer.write("1,student1,password,student, CS\n");
                 writer.write("2,professor1,password,professor, Professor\n");
-                writer.write("3,admin1,password,admin\n");
+                writer.write("3,admin1,password,admin,null\n");
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -100,34 +101,47 @@ public class Main {
                             System.out.println("No sections found for the given course name.");
                             return;
                         }
-                
-                        System.out.println("Course Name\tSection ID\tProfessor");
-                        System.out.println("----------------------------------------");
+
+                        System.out.println("Sections found: ");
+                        System.out.println("Course Name\tSection ID\tProfessor\tTime Slot\tSemester\tSchool Year");
+                        System.out.println("------------------------------------------------------------------------------------");
                         for (Section section : foundSections) {
-                            System.out.printf("%-12s\t%-10s\t%s%n",
-                                    section.getCourse().getCourseName(),
-                                    section.getID(),
-                                    section.getProfessor().getName());
+                            System.out.printf("%-12s\t%-10s\t%-15s\t%-10s\t%-8s\t%s%n",
+                            section.getCourse().getCourseName(),
+                            section.getID(),
+                            section.getProfessor().getName(),
+                            section.getTimeSlot(),
+                            section.getSemester(),
+                            section.getSchoolYear());
                         }
-                        //System.out.println("Sections found: ");
-                        //foundSections.forEach(System.out::println);
-                        System.out.println("1. Register for a section");
-                        System.out.println("2. Back to main menu");
-                        System.out.print("Enter your choice: ");
-                        int choice1 = scanner.nextInt();
-                        scanner.nextLine(); // consume newline
+                        int choice1 = 0;
+                        while (choice1 != 1 && choice1 != 2) {
+                            System.out.println("1. Register for a section");
+                            System.out.println("2. Back to main menu");
+                            System.out.print("Enter your choice: ");
+                            try {
+                                choice1 = scanner.nextInt();
+                                if (choice1 != 1 && choice1 != 2) {
+                                System.out.println("Invalid choice. Please enter 1 or 2.");
+                                }
+                                } catch (InputMismatchException e) {
+                                System.out.println("Invalid input. Please enter a number.");
+                                scanner.next(); // consume the invalid token
+                            }
+                            scanner.nextLine(); // consume newline
+                        }
+
                         if (choice1 == 1) {
                             System.out.print("Enter section ID to register: ");
-                            String sectionID = scanner.nextLine();
+                            String sectionID = scanner.nextLine().toLowerCase().replaceAll("\\s", "");
                             Section sectionToRegister = foundSections.stream()
-                            .filter(s->s.getID().equals(sectionID))
-                            .findFirst()
-                            .orElse(null);
+                                .filter(s -> s.getID().toLowerCase().replaceAll("\\s", "").equals(sectionID))
+                                .findFirst()
+                                .orElse(null);
                             if (sectionToRegister == null) {
                                 System.out.println("No section found with the given ID.");
                             }
                             currentStudent.registerSection(sectionToRegister);
-                            System.out.println("Registration successful!");
                         }
                         break;
                     case 3:
@@ -139,21 +153,37 @@ public class Main {
                             System.out.println("No sections found for the given course name.");
                             return;
                         }
-                
-                        System.out.println("Course Name\t\t\tSection ID\t\tProfessor");
-                        System.out.println("-----------------------------------------------------------------------------------------");
+                        
+                        System.out.println("Sections found: ");
+                        System.out.println("Course Name\tSection ID\tProfessor\tTime Slot\tSemester\tSchool Year");
+                        System.out.println("------------------------------------------------------------------------------------");
                         for (Section section : foundSections) {
-                            System.out.printf("%-30s\t%-20s\t%s%n",
-                                    section.getCourse().getCourseName(),
-                                    section.getID(),
-                                    section.getProfessor().getName());
+                            System.out.printf("%-12s\t%-10s\t%-15s\t%-10s\t%-8s\t%s%n",
+                            section.getCourse().getCourseName(),
+                            section.getID(),
+                            section.getProfessor().getName(),
+                            section.getTimeSlot(),
+                            section.getSemester(),
+                            section.getSchoolYear());
                         }
-                        //System.out.println("Sections found: " + foundSections);
-                        System.out.println("1. Register for a section");
-                        System.out.println("2. Back to main menu");
-                        System.out.print("Enter your choice: ");
-                        int choice2 = scanner.nextInt();
-                        scanner.nextLine(); // consume newline
+
+                        int choice2 = 0;
+                        while (choice2 != 1 && choice2 != 2) {
+                            System.out.println("1. Register for a section");
+                            System.out.println("2. Back to main menu");
+                            System.out.print("Enter your choice: ");
+                            try {
+                                choice2 = scanner.nextInt();
+                                if (choice2 != 1 && choice2 != 2) {
+                                System.out.println("Invalid choice. Please enter 1 or 2.");
+                                }
+                                } catch (InputMismatchException e) {
+                                System.out.println("Invalid input. Please enter a number.");
+                                scanner.next(); // consume the invalid token
+                            }
+                            scanner.nextLine(); // consume newline
+                        }
+
                         if (choice2 == 1) {
                             System.out.print("Enter section ID to register: ");
                             String sectionID = scanner.nextLine();
@@ -165,7 +195,6 @@ public class Main {
                                 System.out.println("No section found with the given ID.");
                             }
                             currentStudent.registerSection(sectionToRegister);
-                            System.out.println("Registration successful!");
                         }
                         break;
                     case 4:
