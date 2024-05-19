@@ -73,9 +73,8 @@ public class Main {
                 scanner.nextLine(); // consume newline
                 switch (choice) {
                     case 1:
-                        currentStudent.changeinfo(currentStudent.getUserID());
-					    currentStudent.SaveData();
-					    System.out.println("save data to file");
+                        currentStudent.changeinfo(currentStudent.getUserID(), currentStudent.getProgram(),
+                        currentStudent.getRole());
 					    break;
                     case 2:
                         System.out.print("Enter course name: ");
@@ -150,7 +149,6 @@ public class Main {
             if (currentUser instanceof Admin) {
                 // Accessing the admin object from database
                 Admin currentAdmin = (Admin) currentUser;
-                List<Section> foundSections = null;
                 System.out.println("1. Add student account");
                 System.out.println("2. Remove student account");
                 System.out.println("3. Add professor account");
@@ -195,8 +193,8 @@ public class Main {
                         break;
                     case 5:
                         System.out.print("Enter the ID of the section to add: ");
-                        String sectionNameToAdd = scanner.nextLine();
-                        currentAdmin.addSection(new Section(sectionNameToAdd));
+                        String sectionIDToAdd = scanner.nextLine();
+                        currentAdmin.addSection(new Section(sectionIDToAdd));
                         break;
                     case 6:
                         System.out.print("Enter the ID of the section to remove: ");
@@ -204,9 +202,9 @@ public class Main {
                         currentAdmin.removeSection(new Section(sectionNameToRemove));
                         break;
                     case 7:
-                        System.out.print("Enter the name of the course to add: ");
-                        String courseNameToAdd = scanner.nextLine();
-                        currentAdmin.addCourse(new Course(courseNameToAdd));
+                        System.out.print("Enter the ID of the course to add: ");
+                        String courseIDToAdd = scanner.nextLine();
+                        currentAdmin.addCourse(new Course(courseIDToAdd));
                         break;
                     case 8: 
                         System.out.print("Enter the name of the course to remove: ");
