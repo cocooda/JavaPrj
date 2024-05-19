@@ -162,7 +162,7 @@ public class Admin extends User {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 4 && parts[3].trim().equalsIgnoreCase(professorName)) {
+                if (parts.length >= 5 && parts[4].trim().equalsIgnoreCase(professorName)) {
                     return true;
                 }
             }
@@ -184,11 +184,12 @@ public class Admin extends User {
     }
 
     // check whether the sections exist
-    private boolean sectionExists(String ID) {
+    private boolean sectionExists(String sectionID) {
         try (BufferedReader reader = new BufferedReader(new FileReader("sections.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.equals(ID)) {
+                String[] parts = line.split(",");
+                if (parts.length >= 1 && parts[0].trim().equalsIgnoreCase(sectionID)) {
                     return true;
                 }
             }
@@ -197,6 +198,7 @@ public class Admin extends User {
         }
         return false;
     }
+    
     // save the data to new file
     private void saveSectionToFile(Section section) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("sections.txt", true))) {
