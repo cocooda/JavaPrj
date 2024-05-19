@@ -89,13 +89,13 @@ public class Student extends User {
         return order.getOrDefault(semester, 0);
     }
 
-    // Method to search sections by course ID
+    /*// Method to search sections by course ID
     public List<Section> searchSectionsByCourseID(String courseID) {
         return readSectionsFromDatabase().stream()
             .filter(section -> section.getCourse().getCourseID().equals(courseID))
             .collect(Collectors.toList());
     }
-
+*/
     // Method to search sections by Course Name
     public List<Section> searchSectionsByCourseName(String courseName) {
         return readSectionsFromDatabase().stream()
@@ -145,7 +145,7 @@ public class Student extends User {
 				password = value[2];
 				program = value[3];
 				role = value[4];
-				List1.add(new Student(userID, username, password, program, role));
+				List1.add(new Student(userID, username, password, role, program));
 				line = br.readLine();
 			}
 			br.close();
@@ -155,19 +155,6 @@ public class Student extends User {
 		}
 
 	}
-
-//	public void Add() {
-//
-//		Scanner sc = new Scanner(System.in);
-//		System.out.println("input id: ");
-//		String ID = sc.nextLine();
-//		System.out.println("input name: ");
-//		String name = sc.nextLine();
-//		System.out.println("input password: ");
-//		String password = sc.nextLine();
-//		List1.add(new Student(name, ID, password, role));
-//
-//	}
 
 	public Student Search(String userID) {
 		for (Student x : List1) {
@@ -181,9 +168,6 @@ public class Student extends User {
 	public void changeinfo(String userID, String program, String role) {
 		ReadData();
 		Student x = Search(userID);
-//		String userID1 = userID;
-//		File myObj = new File("users.txt");
-//		myObj.delete();
 		if (x != null) {
 
 			Scanner sc = new Scanner(System.in);
@@ -191,7 +175,7 @@ public class Student extends User {
 			String name = sc.nextLine();
 			System.out.println("input password: ");
 			String password = sc.nextLine();
-			List1.set(List1.indexOf(x), new Student(userID, name, password, program, role));
+			List1.set(List1.indexOf(x), new Student(userID, name, password, role, program));
 		} else {
 			System.out.println("Student not found.");
 		}
@@ -208,8 +192,8 @@ public class Student extends User {
 		try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt"));
 			for (Student x : List1) {
-				writer.write(x.getUserID() + "," + x.getUsername() + "," + x.getPassword() + "," + x.getProgram() + ","
-						+ x.getRole());
+				writer.write(x.getUserID() + "," + x.getUsername() + "," + x.getPassword() + "," + x.getRole() + ","
+						+ x.getProgram() );
 				writer.newLine();
 
 			}
@@ -219,7 +203,5 @@ public class Student extends User {
 			System.out.println(e.getMessage());
 		}
 	}
-
-
 
 }
