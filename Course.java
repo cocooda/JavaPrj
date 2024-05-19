@@ -1,12 +1,21 @@
 public class Course {
-    private String courseId;
+    private String courseID;
     private String courseName;
+    private int credits;
     private String courseDescription;
 
     // Constructor
-    public Course(String courseId, String courseName, String courseDescription) {
-        this.courseId = courseId;
+    public Course (){
+        this.courseID = " ";
+        this.courseName = " ";
+        this.credits = 0;
+        this.courseDescription = " ";
+    }
+
+    public Course(String courseId, String courseName, int credits, String courseDescription) {
+        this.courseID = courseId;
         this.courseName = courseName;
+        this.credits = credits;
         this.courseDescription = courseDescription;
     }
 
@@ -15,8 +24,8 @@ public class Course {
     }
     
     // Getters
-    public String getCourseId() {
-        return courseId;
+    public String getCourseID() {
+        return courseID;
     }
 
     public String getCourseName() {
@@ -27,9 +36,13 @@ public class Course {
         return courseDescription;
     }
 
+    public int getCredits(){
+        return credits;
+    }
+
     // Setters
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
+    public void setCourseId(String courseID) {
+        this.courseID = courseID;
     }
 
     public void setCourseName(String courseName) {
@@ -40,10 +53,7 @@ public class Course {
         this.courseDescription = courseDescription;
     }
 
-    // Other methods
-    public void printCourseDetails() {
-        System.out.println("Course ID: " + courseId);
-        System.out.println("Course Name: " + courseName);
-        System.out.println("Course Description: " + courseDescription);
+    public void setCredits(int credits){
+        this.credits = credits;
     }
 }
