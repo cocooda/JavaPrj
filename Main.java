@@ -29,8 +29,8 @@ public class Main {
                 FileWriter writer = new FileWriter(usersDatabase);
                 // Write some initial data to the database
                 // The format is: userID,username,password,role
-                writer.write("1,student1,password,student\n");
-                writer.write("2,professor1,password,professor\n");
+                writer.write("1,student1,password,student, CS\n");
+                writer.write("2,professor1,password,professor, Professor\n");
                 writer.write("3,admin1,password,admin\n");
                 writer.close();
             } catch (IOException e) {
@@ -57,12 +57,13 @@ public class Main {
                     continue;
                 }
             }
-
+            
+            //Student
             if (currentUser instanceof Student) {
                 // Accessing the student object from database
                 Student currentStudent = (Student) currentUser;
                 List<Section> foundSections = null;
-                System.out.println("1. Search sections by course ID");
+                System.out.println("1. Change info");
                 System.out.println("2. Search sections by course name");
                 System.out.println("3. Search sections by professor");
                 System.out.println("4. Log out");
@@ -72,30 +73,10 @@ public class Main {
                 scanner.nextLine(); // consume newline
                 switch (choice) {
                     case 1:
-                        System.out.print("Enter course ID: ");
-                        String courseid = scanner.nextLine();
-                        foundSections = currentStudent.searchSectionsByCourseID(courseid);
-                        System.out.println("Sections found: ");
-                        foundSections.forEach(System.out::println);
-                        System.out.println("1. Register for a section");
-                        System.out.println("2. Back to main menu");
-                        System.out.print("Enter your choice: ");
-                        int choice1 = scanner.nextInt();
-                        scanner.nextLine(); // consume newline
-                        if (choice1 == 1) {
-                            System.out.print("Enter section ID to register: ");
-                            String sectionID = scanner.nextLine();
-                            Section sectionToRegister = foundSections.stream()
-                            .filter(s->s.getID().equals(sectionID))
-                            .findFirst()
-                            .orElse(null);
-                            if (sectionToRegister == null) {
-                                System.out.println("No section found with the given ID.");
-                            }
-                            currentStudent.registerSection(sectionToRegister);
-                            System.out.println("Registration successful!");
-                        }
-                        break;
+                        currentStudent.changeinfo(currentStudent.getUserID());
+					    currentStudent.SaveData();
+					    System.out.println("save data to file");
+					    break;
                     case 2:
                         System.out.print("Enter course name: ");
                         String coursename = scanner.nextLine();
@@ -105,9 +86,9 @@ public class Main {
                         System.out.println("1. Register for a section");
                         System.out.println("2. Back to main menu");
                         System.out.print("Enter your choice: ");
-                        int choice2 = scanner.nextInt();
+                        int choice1 = scanner.nextInt();
                         scanner.nextLine(); // consume newline
-                        if (choice2 == 1) {
+                        if (choice1 == 1) {
                             System.out.print("Enter section ID to register: ");
                             String sectionID = scanner.nextLine();
                             Section sectionToRegister = foundSections.stream()
@@ -130,9 +111,9 @@ public class Main {
                         System.out.println("1. Register for a section");
                         System.out.println("2. Back to main menu");
                         System.out.print("Enter your choice: ");
-                        int choice3 = scanner.nextInt();
+                        int choice2 = scanner.nextInt();
                         scanner.nextLine(); // consume newline
-                        if (choice3 == 1) {
+                        if (choice2 == 1) {
                             System.out.print("Enter section ID to register: ");
                             String sectionID = scanner.nextLine();
                             Section sectionToRegister = foundSections.stream()
@@ -166,12 +147,79 @@ public class Main {
             }
             
             //code for admin
-            else {
-                    System.out.println("Access denied. Only students can access these options.");
-                    currentUser.logout();
-                    currentUser = null;
-                    continue;
+            if (currentUser instanceof Admin) {
+                // Accessing the admin object from database
+                Admin currentAdmin = (Admin) currentUser;
+                List<Section> foundSections = null;
+                System.out.println("1. Add student account");
+                System.out.println("2. Remove student account");
+                System.out.println("3. Add professor account");
+                System.out.println("4. Remove professor account");
+                System.out.println("5. Add sections");
+                System.out.println("6. Remove sections");
+                System.out.println("7. Add courses");
+                System.out.println("8. Remove courses");
+                System.out.println("9. Log out");
+                System.out.print("Enter your choice: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // consume newline
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter user ID: ");
+                        String studentID = scanner.nextLine();
+                        System.out.print("Enter username: ");
+                        String studentName = scanner.nextLine();
+                        System.out.print("Enter password: ");
+                        String studentPassword = scanner.nextLine();
+                        currentAdmin.addUser(studentID, studentName, studentPassword, "student");
+                        break;
+                    case 2:
+                        System.out.print("Enter username of student to remove: ");
+                        String studentToRemove = scanner.nextLine();
+                        currentAdmin.removeUser(studentToRemove);
+                        break;
+                    case 3:
+                        System.out.print("Enter user ID: ");
+                        String professorID = scanner.nextLine();
+                        scanner.nextLine();
+                        System.out.print("Enter username: ");
+                        String professorName = scanner.nextLine();
+                        System.out.print("Enter password: ");
+                        String professorPassword = scanner.nextLine();
+                        currentAdmin.addUser(professorID, professorName, professorPassword, "professor");
+                        break;
+                    case 4:
+                        System.out.print("Enter username of professor to remove: ");
+                        String professorToRemove = scanner.nextLine();
+                        currentAdmin.removeUser(professorToRemove);
+                        break;
+                    case 5:
+                        System.out.print("Enter the ID of the section to add: ");
+                        String sectionNameToAdd = scanner.nextLine();
+                        currentAdmin.addSection(new Section(sectionNameToAdd));
+                        break;
+                    case 6:
+                        System.out.print("Enter the ID of the section to remove: ");
+                        String sectionNameToRemove = scanner.nextLine();
+                        currentAdmin.removeSection(new Section(sectionNameToRemove));
+                        break;
+                    case 7:
+                        System.out.print("Enter the name of the course to add: ");
+                        String courseNameToAdd = scanner.nextLine();
+                        currentAdmin.addCourse(new Course(courseNameToAdd));
+                        break;
+                    case 8: 
+                        System.out.print("Enter the name of the course to remove: ");
+                        String courseNameToRemove = scanner.nextLine();
+                        currentAdmin.removeCourse(new Course(courseNameToRemove));
+                        break;
+                    case 9:
+                        currentAdmin.logout();
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please enter a number between 1 and 3.");
                 }
+            }
         }
     }
 }    
