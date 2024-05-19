@@ -44,6 +44,10 @@ public class User {
         this.password = password;
     }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     // Other methods
     public static Map<String, User> readUsersFromDatabase() {
         Map<String, User> users = new HashMap<>();
