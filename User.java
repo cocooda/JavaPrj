@@ -62,7 +62,7 @@ public class User {
 
                 switch (role) {
                     case "admin":
-                        users.put(username, new Admin(userID, username, password, role));
+                        users.put(username, new Admin(userID, username, password, role, null));
                         break;
                     case "student":
                         if (parts.length >= 5) {
