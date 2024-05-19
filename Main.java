@@ -9,11 +9,24 @@ public class Main {
     public static void main(String[] args) {
 
          // Check if the database exists, if not, create it
-        File database = new File("sections.txt");
-        if (!database.exists()) {
+        File coursedatabase = new File("courses.txt");
+        if (!coursedatabase.exists()) {
             try {
-                database.createNewFile();
-                FileWriter writer = new FileWriter(database);
+                coursedatabase.createNewFile();
+                FileWriter writer = new FileWriter(coursedatabase);
+                // Write some initial data to the database
+                writer.write("Computer Science,3,Intro to CS\n");
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        File sectiondatabase = new File("sections.txt");
+        if (!sectiondatabase.exists()) {
+            try {
+                sectiondatabase.createNewFile();
+                FileWriter writer = new FileWriter(sectiondatabase);
                 // Write some initial data to the database
                 writer.write("CS101,Computer Science,John Doe,Fall,Intro to CS,AM,2024\n");
                 writer.close();
@@ -77,14 +90,27 @@ public class Main {
                         currentStudent.getRole());
                         currentStudent.deleteFile();
 					    currentStudent.SaveData();
-					    System.out.println("save data to file");
+					    System.out.println("Saved data to file");
 					    break;
                     case 2:
                         System.out.print("Enter course name: ");
                         String coursename = scanner.nextLine();
                         foundSections = currentStudent.searchSectionsByCourseName(coursename);
-                        System.out.println("Sections found: ");
-                        foundSections.forEach(System.out::println);
+                        if (foundSections.isEmpty()) {
+                            System.out.println("No sections found for the given course name.");
+                            return;
+                        }
+                
+                        System.out.println("Course Name\tSection ID\tProfessor");
+                        System.out.println("----------------------------------------");
+                        for (Section section : foundSections) {
+                            System.out.printf("%-12s\t%-10s\t%s%n",
+                                    section.getCourse().getCourseName(),
+                                    section.getID(),
+                                    section.getProfessor().getName());
+                        }
+                        //System.out.println("Sections found: ");
+                        //foundSections.forEach(System.out::println);
                         System.out.println("1. Register for a section");
                         System.out.println("2. Back to main menu");
                         System.out.print("Enter your choice: ");
@@ -107,9 +133,22 @@ public class Main {
                     case 3:
                         System.out.print("Enter professor name: ");
                         String name = scanner.nextLine();
-                        Professor prof = new Professor(name);
-                        foundSections = currentStudent.searchSectionsByProfessor(prof);
-                        System.out.println("Sections found: " + foundSections);
+                        //Professor prof = new Professor(name);
+                        foundSections = currentStudent.searchSectionsByProfessor(name);
+                        if (foundSections.isEmpty()) {
+                            System.out.println("No sections found for the given course name.");
+                            return;
+                        }
+                
+                        System.out.println("Course Name\t\t\tSection ID\t\tProfessor");
+                        System.out.println("-----------------------------------------------------------------------------------------");
+                        for (Section section : foundSections) {
+                            System.out.printf("%-30s\t%-20s\t%s%n",
+                                    section.getCourse().getCourseName(),
+                                    section.getID(),
+                                    section.getProfessor().getName());
+                        }
+                        //System.out.println("Sections found: " + foundSections);
                         System.out.println("1. Register for a section");
                         System.out.println("2. Back to main menu");
                         System.out.print("Enter your choice: ");
@@ -182,7 +221,6 @@ public class Main {
                     case 3:
                         System.out.print("Enter user ID: ");
                         String professorID = scanner.nextLine();
-                        scanner.nextLine();
                         System.out.print("Enter username: ");
                         String professorName = scanner.nextLine();
                         System.out.print("Enter password: ");
@@ -202,7 +240,7 @@ public class Main {
                     case 6:
                         System.out.print("Enter the ID of the section to remove: ");
                         String sectionIDToRemove = scanner.nextLine();
-                        currentAdmin.removeSection(new Section(sectionIDToRemove));
+                        currentAdmin.removeSection(sectionIDToRemove);
                         break;
                     case 7:
                         System.out.print("Enter the name of the course to add: ");
@@ -212,7 +250,7 @@ public class Main {
                     case 8: 
                         System.out.print("Enter the name of the course to remove: ");
                         String courseNameToRemove = scanner.nextLine();
-                        currentAdmin.removeCourse(new Course(courseNameToRemove));
+                        currentAdmin.removeCourse(courseNameToRemove);
                         break;
                     case 9:
                         currentUser.logout();
