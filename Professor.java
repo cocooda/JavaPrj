@@ -19,8 +19,5 @@ public class Professor extends User {
     public void setName(String name) {
         this.name = name;
     }
-
-    // Methods to get details, create, edit sections
-    // ...
 }
 
