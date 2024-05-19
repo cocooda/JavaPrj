@@ -1,1 +1,18 @@
-CS201,1,Intro to CS 2
+CS101,3,Computer Science I
+CS102,3,Computer Science II
+CS103,3,Computer Science III
+CS201,3,Numerical Methods
+CS202,3,Numerical Methods II
+CS301,4,Foundations Computer Science
+CS310,4,Concepts of Obj.Program I
+MTH101,4,Pre-Calculus Algebra
+MTH102,3,Pre-Calculus Trigonometry
+MTH201,3,Calculus I
+MTH201,3,Calculus II
+MGT101,2,Principle of Management
+ENG101,3,Comp and Modern English I
+ENG102,3,Comp and Modern English II
+ENG201,4,World Literature Before 1660
+ENG202,4,World Literature After 1660
+SCI-L101, Physical Science Lab
+SCI101, Physical Science
