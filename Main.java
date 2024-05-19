@@ -75,6 +75,9 @@ public class Main {
                     case 1:
                         currentStudent.changeinfo(currentStudent.getUserID(), currentStudent.getProgram(),
                         currentStudent.getRole());
+                        currentStudent.deleteFile();
+					    currentStudent.SaveData();
+					    System.out.println("save data to file");
 					    break;
                     case 2:
                         System.out.print("Enter course name: ");
@@ -198,13 +201,13 @@ public class Main {
                         break;
                     case 6:
                         System.out.print("Enter the ID of the section to remove: ");
-                        String sectionNameToRemove = scanner.nextLine();
-                        currentAdmin.removeSection(new Section(sectionNameToRemove));
+                        String sectionIDToRemove = scanner.nextLine();
+                        currentAdmin.removeSection(new Section(sectionIDToRemove));
                         break;
                     case 7:
-                        System.out.print("Enter the ID of the course to add: ");
-                        String courseIDToAdd = scanner.nextLine();
-                        currentAdmin.addCourse(new Course(courseIDToAdd));
+                        System.out.print("Enter the name of the course to add: ");
+                        String coursenameToAdd = scanner.nextLine();
+                        currentAdmin.addCourse(new Course(coursenameToAdd));
                         break;
                     case 8: 
                         System.out.print("Enter the name of the course to remove: ");
@@ -212,7 +215,8 @@ public class Main {
                         currentAdmin.removeCourse(new Course(courseNameToRemove));
                         break;
                     case 9:
-                        currentAdmin.logout();
+                        currentUser.logout();
+                        currentUser = null;
                         break;
                     default:
                         System.out.println("Invalid choice. Please enter a number between 1 and 3.");
