@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.nio.file.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,7 +17,7 @@ import java.util.Scanner;
 
 public class Student extends User {
     private String program;
-    private List<Section> registeredSections; // Assume Section is another class
+    private List<Section> registeredSections;
     
 
     public Student(String userID, String username, String password, String role, String program) {
@@ -44,8 +43,6 @@ public class Student extends User {
     public List<Section> getRegisteredSections() {
         return registeredSections;
     }
-
-    // Log in method
     
 
     // Method to get the current semester
@@ -67,11 +64,8 @@ public class Student extends User {
             List<String> lines = Files.readAllLines(Paths.get("sections.txt"));
             for (String line : lines) {
                 String[] parts = line.split(",");
-                // Assume each line in the text file represents a section
-                // and the attributes are separated by commas
-                // Also assume that the Course and Professor details are represented as strings in the text file
-                Course course = new Course(parts[1]); // Assume Course has a constructor that takes a string
-                Professor professor = new Professor(parts[2]); // Assume Professor has a constructor that takes a string
+                Course course = new Course(parts[1]); 
+                Professor professor = new Professor(parts[2]); 
                 sections.add(new Section(parts[0], course, professor, parts[3], parts[4], parts[5], parts[6]));
             }
         } catch (IOException e) {
@@ -98,17 +92,40 @@ public class Student extends User {
 */
     // Method to search sections by Course Name
     public List<Section> searchSectionsByCourseName(String courseName) {
-        return readSectionsFromDatabase().stream()
-            .filter(section -> section.getCourse().getCourseName().equalsIgnoreCase(courseName))
-            .collect(Collectors.toList());
+        List<Section> allSections = readSectionsFromDatabase();
+        List<Section> matchingSections = new ArrayList<>();
+    
+        String cleanedCourseName = courseName.replaceAll("\\s", "").toLowerCase(); // Remove spaces and convert to lowercase
+    
+        for (Section section : allSections) {
+            String sectionCourseName = section.getCourse().getCourseName().replaceAll("\\s", "").toLowerCase();
+            if (sectionCourseName.startsWith(cleanedCourseName)) {
+                matchingSections.add(section);
+            }
+        }
+    
+        return matchingSections;
     }
-
+    
+    
     // Method to search sections by professor
-    public List<Section> searchSectionsByProfessor(Professor professor) {
-        return readSectionsFromDatabase().stream()
-            .filter(section -> section.getProfessor().equals(professor))
-            .collect(Collectors.toList());
+    public List<Section> searchSectionsByProfessor(String professorName) {
+        List<Section> allSections = readSectionsFromDatabase();
+        List<Section> matchingSections = new ArrayList<>();
+    
+        String cleanedProfessorName = professorName.toLowerCase().replaceAll("\\s", ""); // Remove spaces and convert to lowercase
+    
+        for (Section section : allSections) {
+            String sectionProfessorName = section.getProfessor().getName().toLowerCase().replaceAll("\\s", "");
+            if (sectionProfessorName.startsWith(cleanedProfessorName)) {
+                matchingSections.add(section);
+            }
+        }
+    
+        return matchingSections;
     }
+    
+    
 
     // Method to pick a section and register
     public void registerSection(Section section) {
@@ -171,9 +188,9 @@ public class Student extends User {
 		if (x != null) {
 
 			Scanner sc = new Scanner(System.in);
-			System.out.println("input name: ");
+			System.out.println("Input new username: ");
 			String name = sc.nextLine();
-			System.out.println("input password: ");
+			System.out.println("Input new password: ");
 			String password = sc.nextLine();
 			List1.set(List1.indexOf(x), new Student(userID, name, password, role, program));
 		} else {
