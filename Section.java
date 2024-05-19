@@ -30,6 +30,10 @@ public class Section {
         this.course = course;
     }
 
+    public Section(String ID) {
+        this.ID = ID;
+    }
+
     @Override
     public String toString() {
         return ID;
