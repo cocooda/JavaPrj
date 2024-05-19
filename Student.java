@@ -109,13 +109,6 @@ public class Student extends User {
         }
     }
 
-    // Method to search sections by course ID
-    public List<Section> searchSectionsByCourseID(String courseID) {
-        return readSectionsFromDatabase().stream()
-            .filter(section -> section.getCourse().getCourseId().equals(courseID))
-            .collect(Collectors.toList());
-    }
-
     // Method to search sections by Course Name
     public List<Section> searchSectionsByCourseName(String courseName) {
         return readSectionsFromDatabase().stream()
