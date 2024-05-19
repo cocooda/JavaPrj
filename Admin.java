@@ -10,7 +10,6 @@ public class Admin extends User {
     private static HashMap<String, String> adminCredentials = new HashMap <>();
     private static HashMap<String, Section> sections = new HashMap <>();
     private static HashMap<String, Course> courses = new HashMap <>();
-    private static HashMap<String, Professor> professors = new HashMap <>();
     private static final List<String> VALID_SEMESTERS = Arrays.asList("Spring", "Summer", "Fall");
 
     static {
@@ -85,6 +84,7 @@ public class Admin extends User {
             return;
         }
 
+        boolean userFound = false;
         try {
             List<String> lines = new ArrayList<>();
             BufferedReader reader = new BufferedReader(new FileReader("users.txt"));
@@ -94,9 +94,15 @@ public class Admin extends User {
                 String existingUsername = parts[1];
                 if (!existingUsername.equals(username)) {
                     lines.add(line);
+                    userFound = true;
                 }
             }
             reader.close();
+
+            if (!userFound) {
+                System.out.println("No user found with the username: " + username);
+                return;
+            }
 
             BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt"));
             for (String updatedLine : lines) {
@@ -172,17 +178,33 @@ public class Admin extends User {
         return false;
     }
 
-    // remove Sections function
-    public void removeSection(Section section) {
-        if (sectionExists(section.getID())) {
-            removeSectionFromFile(section);
-            sections.remove(section);
-            System.out.println("Section '" + section.getID() + "' removed successfully!");
-        } else {
-            System.out.println("Section '" + section.getID() + "' does not exist!");
+    // remove Section method
+    public void removeSection(String sectiontoremove) {
+        try {
+            List<String> lines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader("sections.txt"));
+            String line; 
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String existingSection = parts[0].trim().toLowerCase();
+                if (!existingSection.equals(sectiontoremove.replaceAll("\\s", "").toLowerCase())) {
+                lines.add(line);
+                }
+            }
+            reader.close();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter("sections.txt"));
+            for (String updatedLine : lines) {
+                writer.write(updatedLine);
+                writer.newLine();
+            }
+            writer.close();
+
+            System.out.println("Section removed successfully!");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
     // check whether the sections exist
     private boolean sectionExists(String sectionID) {
         try (BufferedReader reader = new BufferedReader(new FileReader("sections.txt"))) {
@@ -199,7 +221,7 @@ public class Admin extends User {
         return false;
     }
     
-    // save the data to new file
+    // save the Section to new file
     private void saveSectionToFile(Section section) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("sections.txt", true))) {
             writer.write(section.getID() + "," +
@@ -214,28 +236,8 @@ public class Admin extends User {
             e.printStackTrace();
         }
     }
-    // remove Sections from file
-    private void removeSectionFromFile(Section section) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("sections.txt"));
-        BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (!line.equals(section)) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Rename the temp file to original file
-        File originalFile = new File("sections.txt");
-        File tempFile = new File("temp.txt");
-        if (!tempFile.renameTo(originalFile)) {
-            System.out.println("Error occurred when removing section.");
-         }
-    }
-
+    
+    //add Course method
     public void addCourse(Course course) {
         if (!courseExists(course.getCourseName())) {
             Scanner scanner = new Scanner(System.in);
@@ -257,17 +259,6 @@ public class Admin extends User {
         }
     }
     
-
-    public void removeCourse(Course course) {
-        if (courseExists(course.getCourseName())) {
-            removeCourseFromFile(course);
-            courses.remove(course);
-            System.out.println("Course '" + course.getCourseName() + "' removed successfully!");
-        } else {
-            System.out.println("Course '" + course.getCourseName() + "' does not exist!");
-        }
-    }
-
     private boolean courseExists(String courseName) {
         try (BufferedReader reader = new BufferedReader(new FileReader("courses.txt"))) {
             String line;
@@ -295,26 +286,31 @@ public class Admin extends User {
         }
     }
 
-    private void removeCourseFromFile(Course course) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("courses.txt"));
-             BufferedWriter writer = new BufferedWriter(new FileWriter("temp.txt"))) {
-            String line;
+    // remove Courses function
+    public void removeCourse(String coursename) {
+        try {
+            List<String> lines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader("courses.txt"));
+            String line; 
             while ((line = reader.readLine()) != null) {
-                if (!line.equals(course)) {
-                    writer.write(line);
-                    writer.newLine();
+                String[] parts = line.split(",");
+                String existingCourse = parts[0].trim().toLowerCase();
+                if (!existingCourse.equals(coursename.replaceAll("\\s", "").toLowerCase())) {
+                    lines.add(line);
                 }
             }
+            reader.close();
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter("courses.txt"));
+            for (String updatedLine : lines) {
+                writer.write(updatedLine);
+                writer.newLine();
+            }
+            writer.close();
+
+            System.out.println("Course removed successfully!");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Rename the temp file to original file
-        File originalFile = new File("courses.txt");
-        File tempFile = new File("temp.txt");
-        if (!tempFile.renameTo(originalFile)) {
-            System.out.println("Error occurred when removing course.");
-        }
     }
-
 }
