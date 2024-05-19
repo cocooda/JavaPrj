@@ -10,23 +10,22 @@ public class Admin extends User {
     private static HashMap<String, String> adminCredentials = new HashMap <>();
     private static HashMap<String, Section> sections = new HashMap <>();
     private static HashMap<String, Course> courses = new HashMap <>();
+    private static HashMap<String, Professor> professors = new HashMap <>();
     private static final List<String> VALID_SEMESTERS = Arrays.asList("Spring", "Summer", "Fall");
 
     static {
         adminCredentials.put("admin", "password");
     }
 
-    //Constructors
+    public Admin (String userID, String username, String password, String role){
+        super(userID, username, password, role);
+    }
+
     public Admin(String userID, String username, String password, String role, String temp) {
 		super(userID, username, password, role);
 		this.temp = temp;
 	}
 
-    public Admin (String userID, String username, String password, String role){
-        super(userID, username, password, role);
-    }
-
-    
     // add Users function
     public void addUser(String newUserID, String newUsername, String newPassword, String newRole) {
         if (newRole.equalsIgnoreCase("admin")) {
@@ -116,12 +115,21 @@ public class Admin extends User {
     public void addSection(Section section){
         if (!sectionExists(section.getID())) {
             Scanner scanner = new Scanner(System.in);
+            
             System.out.print("Enter course name: ");
             String courseName = scanner.nextLine();
+            if (!courseExists(courseName)) {
+                System.out.println("Course '" + courseName + "' does not exist. Cannot add section.");
+                return;
+            }
 
             System.out.print("Enter professor name: ");
             String professorName = scanner.nextLine();
-
+            if (!findProfessorByName(professorName)) {
+                System.out.println("Professor '" + professorName + "' does not exist. Cannot add section.");
+                return;
+            }
+            
             System.out.print("Enter semester (Spring/Summer/Fall): ");
             String semester = scanner.nextLine();
             if (!VALID_SEMESTERS.contains(semester)) {
@@ -148,6 +156,22 @@ public class Admin extends User {
             System.out.println("Section '" + section.getID() + "' already exists!");
         }
     }
+
+    private boolean findProfessorByName(String professorName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 4 && parts[3].trim().equalsIgnoreCase(professorName)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     // remove Sections function
     public void removeSection(Section section) {
         if (sectionExists(section.getID())) {
@@ -211,10 +235,8 @@ public class Admin extends User {
     }
 
     public void addCourse(Course course) {
-        if (!courseExists(course.getCourseID())) {
+        if (!courseExists(course.getCourseName())) {
             Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter course name: ");
-            String courseName = scanner.nextLine();
     
             System.out.print("Enter credits: ");
             int credits = scanner.nextInt();
@@ -224,12 +246,12 @@ public class Admin extends User {
             String description = scanner.nextLine();
     
             // Create a new Course object with the provided data
-            course = new Course(course.getCourseID(), courseName, credits, description);
+            course = new Course(course.getCourseName(), credits, description);
             saveCourseToFile(course);
-            courses.put(course.getCourseID(), course);
-            System.out.println("Course '" + course.getCourseID() + "' added successfully!");
+            courses.put(course.getCourseName(), course);
+            System.out.println("Course '" + course.getCourseName() + "' added successfully!");
         } else {
-            System.out.println("Course '" + course.getCourseID() + "' already exists!");
+            System.out.println("Course '" + course.getCourseName() + "' already exists!");
         }
     }
     
@@ -248,7 +270,8 @@ public class Admin extends User {
         try (BufferedReader reader = new BufferedReader(new FileReader("courses.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.equals(courseName)) {
+                String[] parts = line.split(",");
+                if (parts.length >= 1 && parts[0].trim().equalsIgnoreCase(courseName)) {
                     return true;
                 }
             }
@@ -258,10 +281,10 @@ public class Admin extends User {
         return false;
     }
 
+
     private void saveCourseToFile(Course course) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("courses.txt", true))) {
-            writer.write(course.getCourseID() + "," +
-                         course.getCourseName() + "," +
+            writer.write(course.getCourseName() + "," +
                          course.getCredits() + "," +
                          course.getCourseDescription());
             writer.newLine();
